@@ -3,17 +3,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.googlecode.lanterna.input.KeyStroke;
+
 public class GameEngine {
 	
 	private String gameName = "";
 	private int height, width;
 	private TerminalCanvas canvas;
+	private boolean showStatistics = true;
+	private double deltaTime = .0f;
 	
 	public GameEngine(String gameName, int height, int width) {
 		this.gameName = gameName;
 		this.height = height;
 		this.width = width;
-		canvas = new TerminalCanvas(gameName, height, width);
+		canvas = new TerminalCanvas(gameName, height +1, width);
 	}
 
 	private List<GameObject> objects = new ArrayList<>();
@@ -26,22 +30,18 @@ public class GameEngine {
 	
 	public void start() {
 		
-		while(true) {
-			
-			//Inicialização dos game objects
-			
+		long timeElapsed = System.currentTimeMillis();
+		
+		while(true) {			
 			//Atualização dos game objects
 			List<GameObject> aliveObjects = new ArrayList<>();
 			
 			for(int i=0;i<objects.size(); i++) {
-				
 				if(objects.get(i).isAlive()) {
 					objects.get(i).update(this);
 					aliveObjects.add(objects.get(i));
 				}
 			}
-			
-			//System.out.println(aliveObjects.size());
 			
 			//Mantem somente as entidades vivas
 			this.objects = aliveObjects;
@@ -51,12 +51,25 @@ public class GameEngine {
 				objects.get(i).draw(canvas);
 			}
 			
+			if(showStatistics) {
+				int fps = (int) (1/deltaTime);
+				String fpsText = "FPS: " + fps + " Objects: " + aliveObjects.size();
+				
+				for(int i=0;i<fpsText.length(); i++) {
+					canvas.drawCharPosition(fpsText.charAt(i), height, i);
+				}
+			}
+			
 			try {
 				canvas.draw();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			//canvas.clear();
+			
+			timeElapsed = System.currentTimeMillis() - timeElapsed;
+			deltaTime = timeElapsed/1000d;
+			timeElapsed = System.currentTimeMillis();
 		}
 	}
 
@@ -74,5 +87,13 @@ public class GameEngine {
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+	
+	public void showStatistics(boolean showStatistics) {
+		this.showStatistics = showStatistics;
+	}
+	
+	public double getDeltaTime() {
+		return deltaTime;
 	}
 }

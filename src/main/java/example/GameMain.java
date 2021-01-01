@@ -1,4 +1,4 @@
-package gameExample;
+package example;
 
 import engine.GameEngine;
 import engine.GameObject;
@@ -15,23 +15,25 @@ public class GameMain extends GameObject {
 		engine.addGameObject(new BorderWindow(0, 0));
 	}
 	
-	long timeElap = System.currentTimeMillis();
+	
+	double y = yPosition;
+	
 	
 	@Override
 	public void update(GameEngine engine) {
 		
-		if((timeElap+0) < System.currentTimeMillis()) {
-			timeElap = System.currentTimeMillis();
+		if(yPosition < engine.getWidth()-2) {
+			y += 100 * engine.getDeltaTime();
 			
-			if(yPosition < engine.getWidth()-2) {
-				yPosition++;
+			yPosition = (int) y;
+			
+		} else {
+			yPosition = 1;
+			y = yPosition;
+			if(xPosition < engine.getHeight()-2) {
+				xPosition++;
 			} else {
-				yPosition = 1;
-				if(xPosition < engine.getHeight()-2) {
-					xPosition++;
-				} else {
-					xPosition = 1;
-				}
+				xPosition = 1;
 			}
 		}
 	}

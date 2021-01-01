@@ -1,25 +1,20 @@
 package engine;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.TextColor.RGB;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.terminal.swing.SwingTerminal;
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 
 public class TerminalCanvas {
 
 	private char[][] canvasChar;
 	private String gameName;
 	private Screen screen;
+	private KeyStroke keyStroke;
 
 	public TerminalCanvas(String gameName, int height, int width) {
 		this.canvasChar = new char[height][width];
@@ -27,7 +22,6 @@ public class TerminalCanvas {
 		try {
 			initializeCanvas();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -38,6 +32,8 @@ public class TerminalCanvas {
 				.setInitialTerminalSize(new TerminalSize(canvasChar[0].length, canvasChar.length))
 				.setTerminalEmulatorTitle(gameName)
 				.createTerminal();
+		
+		//keyStroke = terminal.readInput();
 		
 		System.out.println(terminal.getClass().getCanonicalName());
 		screen = new TerminalScreen(terminal);
@@ -77,5 +73,13 @@ public class TerminalCanvas {
 	
 	public void drawCharPosition(char c, int x, int y) {
 		canvasChar[x][y] = c;
+	}
+	
+	/**
+	 * Vai precisar implementar um metodo de capturar o input
+	 * @return
+	 */
+	public KeyStroke getKeyStroke() {
+		return keyStroke;
 	}
 }

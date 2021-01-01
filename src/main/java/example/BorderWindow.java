@@ -1,4 +1,4 @@
-package gameExample;
+package example;
 
 import engine.GameEngine;
 import engine.GameObject;
